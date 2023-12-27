@@ -64,7 +64,8 @@
                         <!-- Form -->
                         <form>
                           <div class="input-group input-group-flush input-group-merge input-group-reverse">
-                            <input class="form-control list-search" type="search" placeholder="Search">
+                            <input class="form-control list-search" v-model="filtro" @input="filtrar()" type="search"
+                              placeholder="Buscar colaborador">
                             <span class="input-group-text">
                               <i class="fe fe-search"></i>
                             </span>
@@ -75,10 +76,10 @@
 
                       <div class="col-auto">
 
-                        <!-- Dropdown -->
-                        <button class="btn btn-sm btn-white" type="button">
+                        <!-- Dropdown 
+                        <button class="btn btn-sm btn-white" v-on:click="filtrar()" type="button">
                           <i class="fe fe-sliders me-1"></i> Filter <span class="badge bg-primary ms-1 d-none">0</span>
-                        </button>
+                        </button>-->
 
                       </div>
                     </div> <!-- / .row -->
@@ -87,7 +88,6 @@
                     <table class="table table-sm table-hover table-nowrap card-table">
                       <thead>
                         <tr>
-
                           <th>
                             <a class="list-sort text-muted">Nombres</a>
                           </th>
@@ -106,7 +106,8 @@
                         </tr>
                       </thead>
                       <tbody class="list fs-base">
-                        <tr v-for="item in colaboradores">
+
+                        <tr v-if="!load_data" v-for="item in colaboradores">
 
                           <td>
 
@@ -145,84 +146,28 @@
                                 <i class="fe fe-more-vertical"></i>
                               </a>
                               <div class="dropdown-menu dropdown-menu-end">
-                                <a href="#!" class="dropdown-item">
-                                  Action
-                                </a>
-                                <a href="#!" class="dropdown-item">
-                                  Another action
-                                </a>
-                                <a href="#!" class="dropdown-item">
-                                  Something else here
-                                </a>
+                                <router-link class="dropdown-item" :to="{ name: 'colaborador-edit', params: { id: item._id || item.id } }" >
+                                  Editar
+                                </router-link>
                               </div>
                             </div>
 
                           </td>
                         </tr>
 
+                        <tr v-if="load_data">
+                          <td colspan="5" class="text-center">
+                            <div class="spinner-border text-primary mt-5 mb-5" role="status">
+                              <span class="visually-hidden">Loading...</span>
+                            </div>
+                          </td>
+                        </tr>
+
+
                       </tbody>
                     </table>
                   </div>
-                  <div class="card-footer d-flex justify-content-between">
 
-                    <!-- Pagination (prev) -->
-                    <ul class="list-pagination-prev pagination pagination-tabs card-pagination">
-                      <li class="page-item">
-                        <a class="page-link ps-0 pe-4 border-end" href="#">
-                          <i class="fe fe-arrow-left me-1"></i> Prev
-                        </a>
-                      </li>
-                    </ul>
-
-                    <!-- Pagination -->
-                    <ul class="list-pagination pagination pagination-tabs card-pagination"></ul>
-
-                    <!-- Pagination (next) -->
-                    <ul class="list-pagination-next pagination pagination-tabs card-pagination">
-                      <li class="page-item">
-                        <a class="page-link ps-4 pe-0 border-start" href="#">
-                          Next <i class="fe fe-arrow-right ms-1"></i>
-                        </a>
-                      </li>
-                    </ul>
-
-                    <!-- Alert -->
-                    <div class="list-alert alert alert-dark alert-dismissible border fade" role="alert">
-
-                      <!-- Content -->
-                      <div class="row align-items-center">
-                        <div class="col">
-
-                          <!-- Checkbox -->
-                          <div class="form-check">
-                            <input class="form-check-input" id="listAlertCheckbox" type="checkbox" checked disabled>
-                            <label class="form-check-label text-white" for="listAlertCheckbox">
-                              <span class="list-alert-count">0</span> deal(s)
-                            </label>
-                          </div>
-
-                        </div>
-                        <div class="col-auto me-n3">
-
-                          <!-- Button -->
-                          <button class="btn btn-sm btn-white-20">
-                            Edit
-                          </button>
-
-                          <!-- Button -->
-                          <button class="btn btn-sm btn-white-20">
-                            Delete
-                          </button>
-
-                        </div>
-                      </div> <!-- / .row -->
-
-                      <!-- Close -->
-                      <button type="button" class="list-alert-close btn-close" aria-label="Close"></button>
-
-                    </div>
-
-                  </div>
                 </div>
 
               </div>
@@ -244,7 +189,6 @@
 import Sidebar from '@/components/Sidebar.vue';
 import TopNav from '@/components/TopNav.vue';
 import axios from 'axios';
-import Pagination from 'vue-pagination-2';
 
 export default {
   name: 'IndexColaboradorApp',
@@ -252,27 +196,53 @@ export default {
   data() {
     return {
       colaboradores: [],
+      colaboradores_const: [],
+      filtro: '',
+      load_data: false,
     }
   },
 
   components: {
     Sidebar,
-    TopNav,
-    'pagination': Pagination
+    TopNav
   },
+
+  methods: {
+    filtrar() {
+      let term = new RegExp(this.filtro, 'i');
+      
+      this.colaboradores = this.colaboradores_const.filter(item =>
+        term.test(item.nombres) ||
+        term.test(item.apellidos) ||
+        term.test(item.email)
+      );
+
+      //this.init_data();
+    },
+    init_data() {
+      this.load_data = true;
+      axios.get(this.$url+ '/usuario/lista_usuario_admin/', {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': this.$token,
+        }
+      }).then((result) => {
+        console.log(result);
+        
+        
+        this.load_data = false;
+        this.colaboradores = result.data;
+        this.colaboradores_const = result.data;
+      }).catch((error) => {
+        console.log(error);
+      });
+
+      console.log(this.$token);
+    }
+  },
+
   beforeMount() {
-    axios.get(this.$url + '/usuario_admin', {
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': this.$token,
-      }
-    }).then((result) => {
-      this.colaboradores = result.data;
-      console.log(result);
-    }).catch((error) => {
-      console.log(error);
-    })
-  }
+    this.init_data();
+  },
 }
 </script>
-  

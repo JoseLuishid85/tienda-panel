@@ -41,7 +41,6 @@
                                                 <a class="nav-link active">
                                                     Nuevo colaborador
                                                 </a>
-
                                             </li>
 
                                         </ul>
@@ -215,26 +214,25 @@ export default {
                     'Authorization': this.$token,
                 }
             }).then((result) => {
-                console.log(result);
-                if (result.data.data == undefined) {
-                    this.$notify({
-                        group: 'foo',
-                        title: 'Error',
-                        text: result.data.data.message,
-                        type: 'error'
-                    });
-                }else{
-                    this.$notify({
-                        group: 'foo',
-                        title: 'Exito',
-                        text: 'Se registro el nuevo colaborador',
-                        type: 'success'
-                    });
+                
+                console.log(result)
+                this.$notify({
+                    group: 'foo',
+                    title: 'Exito',
+                    text: 'Se registro el nuevo colaborador',
+                    type: 'success'
+                });
 
-                    this.$router.push({ name: 'colaborador-index' })
-                }
+                this.$router.push({ name: 'colaborador-index' })
+
             }).catch((error) => {
                 console.log(error);
+                this.$notify({
+                    group: 'foo',
+                    title: 'Error',
+                    text: error.response.data.msg,
+                    type: 'error'
+                });
             });
         }
     },
