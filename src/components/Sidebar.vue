@@ -62,7 +62,7 @@
             <div class="collapse show" id="sidebarDashboards">
               <ul class="nav nav-sm flex-column">
                 <li class="nav-item">
-                  <a href="./index.html" class="nav-link active">
+                  <a href="./index.html" class="nav-link">
                     Default
                   </a>
                 </li>
@@ -81,11 +81,24 @@
           </li>
 
           <li class="nav-item">
-            <router-link class="nav-link" to="/colaborador/index">
+            <router-link class="nav-link" active-class="active" to="/colaborador/">
               <i class="fe fe-user"></i> Colaboradores
             </router-link>
           </li>
 
+        </ul>
+
+        <hr class="navbar-divider my-3">
+        <h6 class="navbar-heading">
+          Control
+        </h6>
+
+        <ul class="navbar-nav mb-md-4">
+          <li class="nav-item">
+            <router-link to="/producto/create" class="nav-link" active-class="active">
+              <i class="fe fe-shopping-cart"></i> Productos
+            </router-link>
+          </li>
         </ul>
 
 

@@ -34,7 +34,7 @@
                                         <!-- Nav -->
                                         <ul class="nav nav-tabs nav-overflow header-tabs">
                                             <li class="nav-item">
-                                                <router-link to="/colaborador/index/" class="nav-link">Todos los
+                                                <router-link to="/colaborador/" class="nav-link">Todos los
                                                     colaboradores</router-link>
                                             </li>
                                             <li class="nav-item">
@@ -160,6 +160,7 @@
 // @ is an alias to /src
 import Sidebar from '@/components/Sidebar.vue';
 import TopNav from '@/components/TopNav.vue';
+import store from '@/store';
 import axios from 'axios';
 
 export default {
@@ -211,7 +212,7 @@ export default {
             axios.post(this.$url + '/usuario', this.colaborador, {
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': this.$token,
+                    'Authorization': this.$store.state.token,
                 }
             }).then((result) => {
                 

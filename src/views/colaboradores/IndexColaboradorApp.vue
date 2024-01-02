@@ -49,6 +49,7 @@
               </div>
             </div>
 
+
             <div class="tab-content">
               <div class="tab-pane fade show active" id="contactsListPane" role="tabpanel"
                 aria-labelledby="contactsListTab">
@@ -146,11 +147,22 @@
                                 <i class="fe fe-more-vertical"></i>
                               </a>
                               <div class="dropdown-menu dropdown-menu-end">
-                                <router-link class="dropdown-item" :to="{ name: 'colaborador-edit', params: { id: item._id || item.id } }" >
+                                <router-link class="dropdown-item"
+                                  :to="{ name: 'colaborador-edit', params: { id: item._id || item.id } }">
                                   Editar
                                 </router-link>
+                                <a style="cursor: pointer;" class="dropdown-item" v-b-modal="'delete-' + item._id">
+                                  <span v-if="item.estado">Desactivar</span>
+                                  <span v-if="!item.estado">Activar</span>
+                                </a>
                               </div>
                             </div>
+
+                            <b-modal centered :id="'delete-' + item._id" title="BootstrapVue"
+                              title-html="<h4 class='card-header-title'><b>Add a member</b></h4>"
+                              @ok="cambiarEstado(item._id, item.estado)">
+                              <p class="my-4">{{ item.nombres }}</p>
+                            </b-modal>
 
                           </td>
                         </tr>
@@ -186,9 +198,10 @@
   
 <script>
 // @ is an alias to /src
+import axios from 'axios';
+import store from '@/store';
 import Sidebar from '@/components/Sidebar.vue';
 import TopNav from '@/components/TopNav.vue';
-import axios from 'axios';
 
 export default {
   name: 'IndexColaboradorApp',
@@ -210,7 +223,7 @@ export default {
   methods: {
     filtrar() {
       let term = new RegExp(this.filtro, 'i');
-      
+
       this.colaboradores = this.colaboradores_const.filter(item =>
         term.test(item.nombres) ||
         term.test(item.apellidos) ||
@@ -221,15 +234,15 @@ export default {
     },
     init_data() {
       this.load_data = true;
-      axios.get(this.$url+ '/usuario/lista_usuario_admin/', {
+      axios.get(this.$url + '/usuario/lista_usuario_admin/', {
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': this.$token,
+          'Authorization': this.$store.state.token,
         }
       }).then((result) => {
         console.log(result);
-        
-        
+
+
         this.load_data = false;
         this.colaboradores = result.data;
         this.colaboradores_const = result.data;
@@ -238,6 +251,36 @@ export default {
       });
 
       console.log(this.$token);
+    },
+    cambiarEstado(id, estado) {
+      console.log(id, estado);
+
+      axios.put(this.$url + '/usuario/cambiar_estado/' + id, { estado: estado }, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': this.$store.state.token,
+        }
+      }).then((result) => {
+        this.$notify({
+          group: 'foo',
+          title: 'Exito',
+          text: 'Se cambio el estado del usuario',
+          type: 'success'
+        });
+
+        this.init_data();
+
+
+      }).catch((error) => {
+        console.log(error);
+        this.$notify({
+          group: 'foo',
+          title: 'Error',
+          text: error.response.data.msg,
+          type: 'error'
+        });
+      });
+
     }
   },
 

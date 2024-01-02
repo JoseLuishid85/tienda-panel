@@ -77,6 +77,7 @@
   
 <script>
 import axios from 'axios';
+import store from '@/store';
 
 export default {
   name: 'LoginApp',
@@ -114,12 +115,9 @@ export default {
           'Content-Type': 'application/json'
         }
       }).then((result) => {
-        console.log(result);
         
-        localStorage.setItem('token',result.data.token);
-        localStorage.setItem('user',JSON.stringify(result.data.usuario));
-
-        this.$router.push({ name:'about' })
+        this.$store.dispatch('saveToken',result.data.token);
+        this.$router.push({ name: 'dashboard' })
       }).catch((error) => {
         console.log(error);
         this.msm_error = error.response.data.msg;
