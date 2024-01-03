@@ -10,6 +10,7 @@ import CreateColaboradorApp from '../views/colaboradores/CreateColaboradorApp.vu
 import IndexColaboradorApp  from '../views/colaboradores/IndexColaboradorApp.vue'
 import EditColaboradorApp from '../views/colaboradores/EditColaboradorApp.vue'
 import CreateProductoApp from '../views/productos/CreateProductoApp.vue'
+import IndexProductoApp from '../views/productos/IndexProductoApp.vue'
 
 Vue.use(VueRouter)
 
@@ -21,7 +22,8 @@ const routes = [
   { path: '/colaborador/edit/:id', name: 'colaborador-edit', component: EditColaboradorApp, meta: { requiresAuth: true }  },
   { path: '/about', name: 'about'  },
 
-  { path: '/producto/create', name: 'producto-index', component: CreateProductoApp, meta: { requiresAuth: true }  },
+  { path: '/producto/', name: 'producto-index', component: IndexProductoApp, meta: { requiresAuth: true }  },
+  { path: '/producto/create', name: 'producto-create', component: CreateProductoApp, meta: { requiresAuth: true }  },
 ]
 
 const router = new VueRouter({
