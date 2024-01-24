@@ -174,11 +174,47 @@
 
                                         <!-- Label -->
                                         <label class="form-label">
+                                            Costo
+                                        </label>
+
+                                        <!-- Input -->
+                                        <input type="number" class="form-control" placeholder="Precio de Costo"
+                                            v-model="producto.costo" @keyup="calcularPrecio()" >
+
+                                    </div>
+
+                                </div>
+
+                                <div class="col-12 col-md-6">
+
+                                    <!-- First name -->
+                                    <div class="form-group">
+
+                                        <!-- Label -->
+                                        <label class="form-label">
+                                            Porcentaje Ganancia % 
+                                        </label>
+
+                                        <!-- Input -->
+                                        <input type="number" class="form-control" placeholder="Porcentaje de Ganancia"
+                                            v-model="producto.porcentaje_ganancia" @keyup="calcularPrecio()">
+
+                                    </div>
+
+                                </div>
+
+                                <div class="col-12 col-md-6">
+
+                                    <!-- Last name -->
+                                    <div class="form-group">
+
+                                        <!-- Label -->
+                                        <label class="form-label">
                                             Precio
                                         </label>
 
                                         <!-- Input -->
-                                        <input type="number" class="form-control" placeholder="Precio"
+                                        <input type="number" class="form-control" placeholder="Precio de Venta"
                                             v-model="producto.precio">
 
                                     </div>
@@ -329,6 +365,9 @@ export default {
             producto: {
                 categoria: '',
                 variedad: '',
+                precio: 0,
+                costo: 0,
+                porcentaje_ganancia: 0,
                 estado: false,
                 descuento: false,
                 portada: undefined
@@ -390,7 +429,7 @@ export default {
                     text: 'Seleccione una variedad',
                     type: 'error'
                 });
-            }else if (!this.producto.precio) {
+            } else if (!this.producto.precio) {
                 this.$notify({
                     group: 'foo',
                     title: 'Error',
@@ -421,6 +460,8 @@ export default {
             fm.append('titulo', this.producto.titulo);
             fm.append('categoria', this.producto.categoria);
             fm.append('variedad', this.producto.variedad);
+            fm.append('costo', this.producto.costo);
+            fm.append('porcentaje_ganancia', this.producto.porcentaje_ganancia);
             fm.append('precio', this.producto.precio);
             fm.append('extracto', this.producto.extracto);
             fm.append('estado', this.producto.estado);
@@ -450,6 +491,16 @@ export default {
                     type: 'error'
                 });
             });
+        },
+
+        calcularPrecio(){
+            let costo =  parseInt(this.producto.costo);
+            let porcen = parseInt(this.producto.porcentaje_ganancia);
+            let precio; 
+
+            precio = costo + (costo * (porcen/100) );
+
+            this.producto.precio = precio;
         }
 
     }

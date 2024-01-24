@@ -169,34 +169,52 @@
 
                                         <!-- Label -->
                                         <label class="form-label">
-                                            Precio
+                                            Costo
                                         </label>
 
                                         <!-- Input -->
-                                        <input type="number" readonly class="form-control" placeholder="Precio"
-                                            v-model="producto.precio">
+                                        <input type="number" class="form-control" placeholder="Precio de Costo"
+                                            v-model="producto.costo" @keyup="calcularPrecio()">
 
                                     </div>
 
                                 </div>
 
-                                <div class="col-12 col-md-12">
+                                <div class="col-12 col-md-6">
 
-                                    <!-- Phone -->
+                                    <!-- First name -->
                                     <div class="form-group">
 
                                         <!-- Label -->
                                         <label class="form-label">
-                                            Extracto
+                                            Porcentaje Ganancia %
                                         </label>
 
                                         <!-- Input -->
-                                        <textarea class="form-control" id="" rows="3" placeholder="Extracto"
-                                            v-model="producto.extracto"></textarea>
+                                        <input type="number" class="form-control" placeholder="Porcentaje de Ganancia"
+                                            v-model="producto.porcentaje_ganancia" @keyup="calcularPrecio()">
 
                                     </div>
 
                                 </div>
+                                <div class="col-12 col-md-6">
+
+                                    <!-- Last name -->
+                                    <div class="form-group">
+
+                                        <!-- Label -->
+                                        <label class="form-label">
+                                            Precio
+                                        </label>
+
+                                        <!-- Input -->
+                                        <input type="number" class="form-control" placeholder="Precio" v-model="producto.precio">
+
+                                    </div>
+
+                                </div>
+
+
 
                             </div> <!-- / .row -->
 
@@ -368,13 +386,13 @@
                                                 <div class="col-auto">
 
                                                     <!-- Button -->
-                                                    <button v-if="item.stock == 0" class="btn btn-sm btn-danger" type="button"
-                                                        v-b-modal="'delete-' + item.id">
+                                                    <button v-if="item.stock == 0" class="btn btn-sm btn-danger"
+                                                        type="button" v-b-modal="'delete-' + item.id">
                                                         Eliminar
                                                     </button>
 
-                                                    <button v-if="item.stock > 0" disabled class="btn btn-sm btn-danger" type="button"
-                                                        v-b-modal="'delete-' + item.id">
+                                                    <button v-if="item.stock > 0" disabled class="btn btn-sm btn-danger"
+                                                        type="button" v-b-modal="'delete-' + item.id">
                                                         Eliminar
                                                     </button>
 
@@ -422,6 +440,9 @@ export default {
             producto: {
                 categoria: '',
                 variedad: '',
+                precio: 0,
+                costo: 0,
+                porcentaje_ganancia: 0,
                 estado: false,
                 descuento: false,
                 portada: undefined
@@ -515,6 +536,7 @@ export default {
                     type: 'error'
                 });
             } else {
+                console.log(this.producto);
                 this.actualizarProducto();
             }
         },
@@ -528,6 +550,9 @@ export default {
                 data.append('titulo', this.producto.titulo);
                 data.append('categoria', this.producto.categoria);
                 data.append('variedad', this.producto.variedad);
+                data.append('costo', this.producto.costo);
+                data.append('porcentaje_ganancia', this.producto.porcentaje_ganancia);
+                data.append('precio', this.producto.precio);
                 data.append('extracto', this.producto.extracto);
                 data.append('estado', this.producto.estado);
                 data.append('descuento', this.producto.descuento);
@@ -536,7 +561,6 @@ export default {
                 content = 'application/json';
                 data = this.producto;
             }
-
 
             axios.put(this.$url + '/producto/actualizar_producto/' + this.$route.params.id, data, {
                 headers: {
@@ -632,7 +656,7 @@ export default {
             });
         },
 
-        eliminarVariedad(id){
+        eliminarVariedad(id) {
             axios.delete(this.$url + '/variedad/' + id, {
                 headers: {
                     'Content-Type': 'application/json',
@@ -656,8 +680,17 @@ export default {
                     type: 'error'
                 });
             });
-        }
+        },
 
+        calcularPrecio(){
+            let costo =  parseInt(this.producto.costo);
+            let porcen = parseInt(this.producto.porcentaje_ganancia);
+            let precio; 
+
+            precio = costo + (costo * (porcen/100) );
+
+            this.producto.precio = precio;
+        }
 
 
 

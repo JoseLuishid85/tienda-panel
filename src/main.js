@@ -13,6 +13,7 @@ Vue.prototype.$url = 'http://localhost:4000/api';
 Vue.prototype.$token = localStorage.getItem('token');
 
 import 'bootstrap-vue/dist/bootstrap-vue.css'
+import "vue-search-select/dist/VueSearchSelect.css"
 
 Vue.use(Notifications);
 Vue.use(BootstrapVue);
