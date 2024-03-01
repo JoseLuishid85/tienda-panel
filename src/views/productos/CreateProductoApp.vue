@@ -97,7 +97,7 @@
                             <hr class="my-5">
 
                             <div class="row">
-                                <div class="col-12 col-md-6">
+                                <div class="col-12 col-md-12">
 
                                     <!-- Email address -->
                                     <div class="form-group">
@@ -135,11 +135,33 @@
                                         </small>
 
                                         <!-- Input -->
-                                        <select name="" class="form-select" v-model="producto.categoria">
+                                        <select name="" class="form-select" v-model="producto.id_categoria" @change="init_subCategoria($event)" >
                                             <option value="" disabled selected>Seleccionar</option>
-                                            <option value="Categoria 1">Categoria 1</option>
-                                            <option value="Categoria 2">Categoria 2</option>
-                                            <option value="Categoria 3">Categoria 3</option>
+                                            <option :value="item.id" v-for="item in categorias">{{ item.nombre }}</option>
+                                        </select>
+
+                                    </div>
+
+                                </div>
+
+                                <div class="col-12 col-md-6">
+
+                                    <!-- First name -->
+                                    <div class="form-group">
+
+                                        <!-- Label -->
+                                        <label class="form-label">
+                                            Sub-Categoria
+                                        </label>
+
+                                        <small class="form-text text-muted">
+                                            This contact will be shown to others publicly.
+                                        </small>
+
+                                        <!-- Input -->
+                                        <select name="" class="form-select" v-model="producto.id_sub_categoria">
+                                            <option value="" disabled selected>Seleccionar</option>
+                                            <option :value="item.id" v-for="item in subCategorias">{{ item.nombre }}</option>
                                         </select>
 
                                     </div>
@@ -179,7 +201,7 @@
 
                                         <!-- Input -->
                                         <input type="number" class="form-control" placeholder="Precio de Costo"
-                                            v-model="producto.costo" @keyup="calcularPrecio()" >
+                                            v-model="producto.costo" @keyup="calcularPrecio()">
 
                                     </div>
 
@@ -192,7 +214,7 @@
 
                                         <!-- Label -->
                                         <label class="form-label">
-                                            Porcentaje Ganancia % 
+                                            Porcentaje Ganancia %
                                         </label>
 
                                         <!-- Input -->
@@ -363,7 +385,8 @@ export default {
         return {
             str_image: '/assets/img/producto.png',
             producto: {
-                categoria: '',
+                id_categoria: '',
+                id_sub_categoria: '',
                 variedad: '',
                 precio: 0,
                 costo: 0,
@@ -373,6 +396,8 @@ export default {
                 portada: undefined
             },
             portada: undefined,
+            categorias: [],
+            subCategorias: [],
         }
     },
 
@@ -415,11 +440,18 @@ export default {
                     text: 'Agregar el titulo',
                     type: 'error'
                 });
-            } else if (!this.producto.categoria) {
+            } else if (!this.producto.id_categoria) {
                 this.$notify({
                     group: 'foo',
                     title: 'Error',
                     text: 'Seleccione una categoria',
+                    type: 'error'
+                });
+            } else if (!this.producto.id_sub_categoria) {
+                this.$notify({
+                    group: 'foo',
+                    title: 'Error',
+                    text: 'Seleccione una Sub-Categoria',
                     type: 'error'
                 });
             } else if (!this.producto.variedad) {
@@ -458,7 +490,8 @@ export default {
         registrarProducto() {
             var fm = new FormData();
             fm.append('titulo', this.producto.titulo);
-            fm.append('categoria', this.producto.categoria);
+            fm.append('id_categoria', this.producto.id_categoria);
+            fm.append('id_sub_categoria', this.producto.id_sub_categoria);
             fm.append('variedad', this.producto.variedad);
             fm.append('costo', this.producto.costo);
             fm.append('porcentaje_ganancia', this.producto.porcentaje_ganancia);
@@ -468,6 +501,9 @@ export default {
             fm.append('descuento', this.producto.descuento);
             fm.append('portada', this.producto.portada);
 
+            console.log(fm);
+
+            
             axios.post(this.$url + '/producto', fm, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
@@ -493,16 +529,56 @@ export default {
             });
         },
 
-        calcularPrecio(){
-            let costo =  parseInt(this.producto.costo);
+        calcularPrecio() {
+            let costo = parseInt(this.producto.costo);
             let porcen = parseInt(this.producto.porcentaje_ganancia);
-            let precio; 
+            let precio;
 
-            precio = costo + (costo * (porcen/100) );
+            precio = costo + (costo * (porcen / 100));
 
             this.producto.precio = precio;
+        },
+
+        init_categorias() {
+            axios.get(this.$url + '/categoria/buscar/', {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': this.$store.state.token,
+                }
+            }).then((result) => {
+                this.categorias = result.data;
+                console.log(this.categorias);
+
+            }).catch((error) => {
+                console.log(error);
+            });
+        },
+
+        init_subCategoria(event){
+            let id_categoria = event.target.value;
+            let subcat;
+
+            subcat = this.categorias.filter(cat => cat.id == id_categoria);
+            this.subCategorias = subcat[0].Sub_Categoria;
+            console.log(this.subCategorias);
+            /*
+            axios.get(this.$url + '/sub_categoria/categoria/' + id_categoria, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': this.$store.state.token,
+                }
+            }).then((result) => {
+                this.subCategorias = result.data;
+
+            }).catch((error) => {
+                console.log(error);
+            });*/
         }
 
+
+    },
+    beforeMount() {
+        this.init_categorias();
     }
 }
 </script>

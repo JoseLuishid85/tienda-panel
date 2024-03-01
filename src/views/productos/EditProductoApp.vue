@@ -94,7 +94,7 @@
                             <hr class="my-5">
 
                             <div class="row">
-                                <div class="col-12 col-md-6">
+                                <div class="col-12 col-md-12">
 
                                     <!-- Email address -->
                                     <div class="form-group">
@@ -131,11 +131,34 @@
                                         </small>
 
                                         <!-- Input -->
-                                        <select name="" class="form-select" v-model="producto.categoria">
+                                        <select name="" class="form-select" v-model="producto.id_categoria" @change="init_subCategoria()">
                                             <option value="" disabled selected>Seleccionar</option>
-                                            <option value="Categoria 1">Categoria 1</option>
-                                            <option value="Categoria 2">Categoria 2</option>
-                                            <option value="Categoria 3">Categoria 3</option>
+                                            <option :value="item.id" v-for="item in categorias">{{ item.nombre }}</option>
+                                        </select>
+
+                                    </div>
+
+                                </div>
+                                
+
+                                <div class="col-12 col-md-6">
+
+                                    <!-- First name -->
+                                    <div class="form-group">
+
+                                        <!-- Label -->
+                                        <label class="form-label">
+                                            Categoria
+                                        </label>
+
+                                        <small class="form-text text-muted">
+                                            This contact will be shown to others publicly.
+                                        </small>
+
+                                        <!-- Input -->
+                                        <select name="" class="form-select" v-model="producto.id_sub_categoria">
+                                            <option value="" disabled selected>Seleccionar</option>
+                                            <option :value="item.id" v-for="item in subCategorias">{{ item.nombre }}</option>
                                         </select>
 
                                     </div>
@@ -208,7 +231,8 @@
                                         </label>
 
                                         <!-- Input -->
-                                        <input type="number" class="form-control" placeholder="Precio" v-model="producto.precio">
+                                        <input type="number" class="form-control" placeholder="Precio"
+                                            v-model="producto.precio">
 
                                     </div>
 
@@ -438,7 +462,8 @@ export default {
         return {
             str_image: '/assets/img/producto.png',
             producto: {
-                categoria: '',
+                id_categoria: '',
+                id_sub_categoria: '',
                 variedad: '',
                 precio: 0,
                 costo: 0,
@@ -450,6 +475,8 @@ export default {
             portada: undefined,
             variedad: {},
             variedades: [],
+            categorias: [],
+            subCategorias: [],
 
         }
     },
@@ -463,7 +490,7 @@ export default {
                 }
             }).then((result) => {
                 this.producto = result.data;
-                console.log(this.producto)
+                console.log(this.producto);
                 this.str_image = this.$url + '/producto/obtener_image_producto/' + this.producto.portada;
             });
         },
@@ -507,11 +534,18 @@ export default {
                     text: 'Agregar el titulo',
                     type: 'error'
                 });
-            } else if (!this.producto.categoria) {
+            } else if (!this.producto.id_categoria) {
                 this.$notify({
                     group: 'foo',
                     title: 'Error',
                     text: 'Seleccione una categoria',
+                    type: 'error'
+                });
+            }else if (!this.producto.id_sub_categoria) {
+                this.$notify({
+                    group: 'foo',
+                    title: 'Error',
+                    text: 'Seleccione una Sub-Categoria',
                     type: 'error'
                 });
             } else if (!this.producto.variedad) {
@@ -536,7 +570,6 @@ export default {
                     type: 'error'
                 });
             } else {
-                console.log(this.producto);
                 this.actualizarProducto();
             }
         },
@@ -548,7 +581,8 @@ export default {
                 content = 'multipart/form-data';
                 data = new FormData();
                 data.append('titulo', this.producto.titulo);
-                data.append('categoria', this.producto.categoria);
+                data.append('id_categoria', this.producto.id_categoria);
+                data.append('id_sub_categoria', this.producto.id_sub_categoria);
                 data.append('variedad', this.producto.variedad);
                 data.append('costo', this.producto.costo);
                 data.append('porcentaje_ganancia', this.producto.porcentaje_ganancia);
@@ -568,7 +602,6 @@ export default {
                     'Authorization': this.$store.state.token,
                 }
             }).then((result) => {
-                console.log(result);
                 this.$notify({
                     group: 'foo',
                     title: 'Exito',
@@ -636,6 +669,28 @@ export default {
             });
         },
 
+        init_categorias() {
+            axios.get(this.$url + '/categoria/buscar/', {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': this.$store.state.token,
+                }
+            }).then((result) => {
+                this.categorias = result.data;
+                this.init_subCategoria();
+            }).catch((error) => {
+                console.log(error);
+            });
+        },
+
+        init_subCategoria(){
+            let id_categoria = this.producto.id_categoria
+            let subcat;
+
+            subcat = this.categorias.filter(cat => cat.id == id_categoria);
+            this.subCategorias = subcat[0].Sub_Categoria;
+        },
+
         generarSKU() {
             let sku = this.producto.titulo.substr(0, 3) + '' + this.producto.variedad.substr(0, 3) + '' + this.variedad.variedad.substr(0, 3) + '' + this.variedad.proveedor.substr(0, 3);
             return sku.toUpperCase();
@@ -649,7 +704,6 @@ export default {
                 }
             }).then((result) => {
                 this.variedades = result.data;
-                console.log(this.variedades);
 
             }).catch((error) => {
                 console.log(error);
@@ -682,21 +736,20 @@ export default {
             });
         },
 
-        calcularPrecio(){
-            let costo =  parseInt(this.producto.costo);
+        calcularPrecio() {
+            let costo = parseInt(this.producto.costo);
             let porcen = parseInt(this.producto.porcentaje_ganancia);
-            let precio; 
+            let precio;
 
-            precio = costo + (costo * (porcen/100) );
+            precio = costo + (costo * (porcen / 100));
 
             this.producto.precio = precio;
         }
 
-
-
     },
     beforeMount() {
         this.init_data();
+        this.init_categorias();
         this.init_variedad();
     }
 }
