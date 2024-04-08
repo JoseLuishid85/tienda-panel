@@ -165,27 +165,7 @@
 
                                 </div>
 
-                                <div class="col-12 col-md-6">
-
-                                    <!-- First name -->
-                                    <div class="form-group">
-
-                                        <!-- Label -->
-                                        <label class="form-label">
-                                            Variedad
-                                        </label>
-
-                                        <!-- Input -->
-                                        <select name="" class="form-select" v-model="producto.variedad">
-                                            <option value="" disabled selected>Seleccionar</option>
-                                            <option value="Talla">Talla</option>
-                                            <option value="Color">Color</option>
-                                        </select>
-
-                                    </div>
-
-                                </div>
-                                <div class="col-12 col-md-6">
+                                <div class="col-12 col-md-4">
 
                                     <!-- Last name -->
                                     <div class="form-group">
@@ -203,7 +183,7 @@
 
                                 </div>
 
-                                <div class="col-12 col-md-6">
+                                <div class="col-12 col-md-4">
 
                                     <!-- First name -->
                                     <div class="form-group">
@@ -220,7 +200,7 @@
                                     </div>
 
                                 </div>
-                                <div class="col-12 col-md-6">
+                                <div class="col-12 col-md-4">
 
                                     <!-- Last name -->
                                     <div class="form-group">
@@ -242,7 +222,63 @@
 
                             </div> <!-- / .row -->
 
+                            <div class="row">
+                                <div class="col-12">
 
+                                    <h3>Variedades</h3>
+
+                                    <!-- Public profile -->
+                                    <div class="form-group">
+                                        <div class="row">
+
+                                        
+                                        <!-- Label -->
+                                        <div class="col-3">
+                                            <label class="mb-1">
+                                                Talla
+                                            </label>
+                                                <div class="col-auto">
+                                                    <div class="form-check form-switch">
+                                                        <input class="form-check-input" type="checkbox" id="switchOne"
+                                                            v-model="producto.talla" />
+                                                        <label class="form-check-label" for="switchOne"></label>
+                                                    </div>
+                                            </div> 
+                                        </div>
+
+                                        <div class="col-3">
+                                            <label class="mb-1">
+                                                Color
+                                            </label>
+                                                <div class="col-auto">
+                                                    <div class="form-check form-switch">
+                                                        <input class="form-check-input" type="checkbox" id="switchOne"
+                                                            v-model="producto.color" />
+                                                        <label class="form-check-label" for="switchOne"></label>
+                                                    </div>
+
+                                                </div>
+                                        </div>
+
+                                        <div class="col-3">
+                                            <label class="mb-1">
+                                                Medida
+                                            </label>
+                                                <div class="col-auto">
+                                                    <div class="form-check form-switch">
+                                                        <input class="form-check-input" type="checkbox" id="switchOne"
+                                                            v-model="producto.medida" />
+                                                        <label class="form-check-label" for="switchOne"></label>
+                                                    </div>
+
+                                                </div>
+                                        </div>
+                                        
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
 
                             <div class="row">
                                 <div class="col-12 col-md-6">
@@ -353,19 +389,26 @@
                             </div>
 
                             <div class="row mb-5">
-                                <div class="col-lg-5">
+                                <div class="col-lg-4" v-if="producto.talla">
                                     <small class="text-muted">
-                                        Proveedor
+                                        Talla
                                     </small>
-                                    <input type="text" class="form-control" placeholder="Empresa proveedora"
-                                        v-model="variedad.proveedor">
+                                    <input type="text" class="form-control" placeholder="Talla del Producto"
+                                        v-model="variedad.talla">
                                 </div>
-                                <div class="col-lg-5">
+                                <div class="col-lg-4" v-if="producto.color" >
                                     <small class="text-muted">
-                                        Variedad
+                                        Color
                                     </small>
-                                    <input type="text" class="form-control" placeholder="Tallas, colores..."
-                                        v-model="variedad.variedad">
+                                    <input type="text" class="form-control" placeholder="Color del Producto"
+                                        v-model="variedad.color">
+                                </div>
+                                <div class="col-lg-4" v-if="producto.medida">
+                                    <small class="text-muted">
+                                        Medida
+                                    </small>
+                                    <input type="text" class="form-control" placeholder="Medida"
+                                        v-model="variedad.medida">
                                 </div>
                                 <div class="col">
                                     <small class="text-muted">
@@ -381,17 +424,15 @@
 
                                     <!-- List group -->
                                     <div class="list-group list-group-flush my-n3">
-
+                                        
                                         <div class="list-group-item" v-for="item in variedades">
                                             <div class="row align-items-center">
                                                 <div class="col">
 
-                                                    <!-- Heading -->
-                                                    <h4 class="mb-1">
-                                                        {{ item.variedad.toUpperCase() }}
-                                                    </h4>
+                                                    <h4 class="mb-1" v-if="item.talla"> {{ item.talla.toUpperCase() }} </h4>
+                                                    <h4 class="mb-1" v-if="item.color"> {{ item.color.toUpperCase() }} </h4>
+                                                    <h4 class="mb-1" v-if="item.medida"> {{ item.medida.toUpperCase() }} </h4>
 
-                                                    <!-- Text -->
                                                     <small class="text-muted">
                                                         <b>SKU: </b> {{ item.sku.toUpperCase() }}
                                                     </small>
@@ -402,14 +443,12 @@
                                                         {{ item.stock }}
                                                     </h4>
 
-                                                    <!-- Text -->
                                                     <small class="text-muted">
                                                         Unidades
                                                     </small>
                                                 </div>
                                                 <div class="col-auto">
 
-                                                    <!-- Button -->
                                                     <button v-if="item.stock == 0" class="btn btn-sm btn-danger"
                                                         type="button" v-b-modal="'delete-' + item.id">
                                                         Eliminar
@@ -426,8 +465,9 @@
                                                     @ok="eliminarVariedad(item.id)">
                                                     <p class="my-4">{{ item.sku }}</p>
                                                 </b-modal>
-                                            </div> <!-- / .row -->
+                                            </div> 
                                         </div>
+                                    
                                     </div>
 
                                 </div>
@@ -461,13 +501,17 @@ export default {
     data() {
         return {
             str_image: '/assets/img/producto.png',
+            
             producto: {
                 id_categoria: '',
                 id_sub_categoria: '',
-                variedad: '',
                 precio: 0,
                 costo: 0,
                 porcentaje_ganancia: 0,
+                extracto: '',
+                talla: false,
+                color: false,
+                medida: false,
                 estado: false,
                 descuento: false,
                 portada: undefined
@@ -548,13 +592,6 @@ export default {
                     text: 'Seleccione una Sub-Categoria',
                     type: 'error'
                 });
-            } else if (!this.producto.variedad) {
-                this.$notify({
-                    group: 'foo',
-                    title: 'Error',
-                    text: 'Seleccione una variedad',
-                    type: 'error'
-                });
             } else if (!this.producto.extracto) {
                 this.$notify({
                     group: 'foo',
@@ -620,6 +657,8 @@ export default {
         },
 
         validarVariedad() {
+            console.log("validarVariedad");
+            /*
             if (!this.variedad.proveedor) {
                 this.$notify({
                     group: 'foo',
@@ -638,11 +677,17 @@ export default {
                 this.variedad.id_producto = this.$route.params.id;
                 this.variedad.sku = this.generarSKU();
                 this.registrarVariedad();
-            }
+            }*/
+
+            this.variedad.id_producto = this.$route.params.id;
+            this.variedad.sku = this.generarSKU();
+            this.registrarVariedad();
 
         },
 
         registrarVariedad() {
+
+            
             axios.post(this.$url + '/variedad', this.variedad, {
                 headers: {
                     'Content-Type': 'application/json',
@@ -692,7 +737,21 @@ export default {
         },
 
         generarSKU() {
-            let sku = this.producto.titulo.substr(0, 3) + '' + this.producto.variedad.substr(0, 3) + '' + this.variedad.variedad.substr(0, 3) + '' + this.variedad.proveedor.substr(0, 3);
+            //let sku = this.producto.titulo.substr(0, 3) + '' + this.producto.variedad.substr(0, 3) + '' + this.variedad.variedad.substr(0, 3) + '' + this.variedad.proveedor.substr(0, 3);
+            let  sku;
+            if(this.producto.talla){
+                sku = this.producto.titulo.substr(0, 3) + '' + this.variedad.talla.substr(0, 3);
+            }
+
+            if(this.producto.color){
+                sku = this.producto.titulo.substr(0, 3) + '' + this.variedad.color.substr(0, 3);
+            }
+
+            if(this.producto.medida){
+                sku = this.producto.titulo.substr(0, 3) + '' + this.variedad.medida.substr(0, 3);
+            }
+            
+            
             return sku.toUpperCase();
         },
 

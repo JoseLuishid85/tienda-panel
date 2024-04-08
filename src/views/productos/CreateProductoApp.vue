@@ -168,28 +168,8 @@
 
                                 </div>
 
-                                <div class="col-12 col-md-6">
 
-                                    <!-- First name -->
-                                    <div class="form-group">
-
-                                        <!-- Label -->
-                                        <label class="form-label">
-                                            Variedad
-                                        </label>
-
-                                        <!-- Input -->
-                                        <select name="" class="form-select" v-model="producto.variedad">
-                                            <option value="" disabled selected>Seleccionar</option>
-                                            <option value="Talla">Talla</option>
-                                            <option value="Color">Color</option>
-                                        </select>
-
-                                    </div>
-
-                                </div>
-
-                                <div class="col-12 col-md-6">
+                                <div class="col-12 col-md-4">
 
                                     <!-- Last name -->
                                     <div class="form-group">
@@ -207,7 +187,7 @@
 
                                 </div>
 
-                                <div class="col-12 col-md-6">
+                                <div class="col-12 col-md-4">
 
                                     <!-- First name -->
                                     <div class="form-group">
@@ -225,7 +205,7 @@
 
                                 </div>
 
-                                <div class="col-12 col-md-6">
+                                <div class="col-12 col-md-4">
 
                                     <!-- Last name -->
                                     <div class="form-group">
@@ -263,7 +243,63 @@
 
                             </div> <!-- / .row -->
 
+                            <div class="row">
+                                <div class="col-12">
 
+                                    <h3>Variedades</h3>
+
+                                    <!-- Public profile -->
+                                    <div class="form-group">
+                                        <div class="row">
+
+                                        
+                                        <!-- Label -->
+                                        <div class="col-3">
+                                            <label class="mb-1">
+                                                Talla
+                                            </label>
+                                                <div class="col-auto">
+                                                    <div class="form-check form-switch">
+                                                        <input class="form-check-input" type="checkbox" id="switchOne"
+                                                            v-model="producto.talla" />
+                                                        <label class="form-check-label" for="switchOne"></label>
+                                                    </div>
+                                            </div> 
+                                        </div>
+
+                                        <div class="col-3">
+                                            <label class="mb-1">
+                                                Color
+                                            </label>
+                                                <div class="col-auto">
+                                                    <div class="form-check form-switch">
+                                                        <input class="form-check-input" type="checkbox" id="switchOne"
+                                                            v-model="producto.color" />
+                                                        <label class="form-check-label" for="switchOne"></label>
+                                                    </div>
+
+                                                </div>
+                                        </div>
+
+                                        <div class="col-3">
+                                            <label class="mb-1">
+                                                Medida
+                                            </label>
+                                                <div class="col-auto">
+                                                    <div class="form-check form-switch">
+                                                        <input class="form-check-input" type="checkbox" id="switchOne"
+                                                            v-model="producto.medida" />
+                                                        <label class="form-check-label" for="switchOne"></label>
+                                                    </div>
+
+                                                </div>
+                                        </div>
+                                        
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div> 
 
                             <div class="row">
                                 <div class="col-12 col-md-6">
@@ -344,7 +380,7 @@
                                     </div>
 
                                 </div>
-                            </div> <!-- / .row -->
+                            </div> 
 
                             <!-- Divider -->
                             <hr class="mt-4 mb-5">
@@ -387,10 +423,13 @@ export default {
             producto: {
                 id_categoria: '',
                 id_sub_categoria: '',
-                variedad: '',
                 precio: 0,
                 costo: 0,
                 porcentaje_ganancia: 0,
+                extracto: '',
+                talla: false,
+                color: false,
+                medida: false,
                 estado: false,
                 descuento: false,
                 portada: undefined
@@ -454,13 +493,6 @@ export default {
                     text: 'Seleccione una Sub-Categoria',
                     type: 'error'
                 });
-            } else if (!this.producto.variedad) {
-                this.$notify({
-                    group: 'foo',
-                    title: 'Error',
-                    text: 'Seleccione una variedad',
-                    type: 'error'
-                });
             } else if (!this.producto.precio) {
                 this.$notify({
                     group: 'foo',
@@ -496,6 +528,9 @@ export default {
             fm.append('costo', this.producto.costo);
             fm.append('porcentaje_ganancia', this.producto.porcentaje_ganancia);
             fm.append('precio', this.producto.precio);
+            fm.append('talla', this.producto.talla);
+            fm.append('color', this.producto.color);
+            fm.append('medida', this.producto.medida);
             fm.append('extracto', this.producto.extracto);
             fm.append('estado', this.producto.estado);
             fm.append('descuento', this.producto.descuento);
