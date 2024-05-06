@@ -38,12 +38,12 @@ import { Axios } from 'axios';
                                         <!-- Nav -->
                                         <ul class="nav nav-tabs nav-overflow header-tabs">
                                             <li class="nav-item">
-                                                <a class="nav-link ">
+                                                <router-link to="/ingreso" class="nav-link ">
                                                     Ingresos
-                                                </a>
+                                                </router-link>
                                             </li>
                                             <li class="nav-item">
-                                                <a class="nav-link active">Nuevo Ingreso</a>
+                                                <router-link to="/ingreso/create" class="nav-link active">Nuevo Ingreso</router-link>
                                             </li>
 
                                         </ul>

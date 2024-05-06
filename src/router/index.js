@@ -27,9 +27,13 @@ const routes = [
   { path: '/producto/edit/:id', name: 'producto-edit', component: ()=> import('../views/productos/EditProductoApp.vue'), meta: { requiresAuth: true }  },
   { path: '/producto/galeria/:id', name: 'producto-galeria', component: ()=> import('../views/productos/GaleriaProductoApp.vue'), meta: { requiresAuth: true }  },
 
+  { path: '/ingreso/', name: 'ingreso-index', component: () => import('../views/ingreso/IndexIngresoApp.vue'), meta: { requiresAuth: true }  },
   { path: '/ingreso/create', name: 'ingreso-create', component: () => import('../views/ingreso/CreateIngresoApp.vue'), meta: { requiresAuth: true }  },
+  { path: '/ingreso/:id', name: 'ingreso-detalle', component: () => import('../views/ingreso/DetalleIngresoApp.vue'), meta: { requiresAuth: true }  },
   
   
+  { path: '/venta/', name: 'venta-index', component: () => import('../views/ventas/VentasIndexApp.vue'), meta: { requiresAuth: true }  },
+
   { path: '/categoria', name: 'categoria', component: () => import('../views/categorias/IndexCategoriaApp.vue'), meta: { requiresAuth: true }  },
 ]
 

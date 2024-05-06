@@ -110,6 +110,16 @@
               <i class="fe fe-folder"></i> Ingreso
             </router-link>
           </li>
+
+          <li class="nav-item">
+            <router-link to="/venta/" class="nav-link" active-class="active">
+              <i class="fe fe-shopping-bag"></i> Venta
+            </router-link>
+
+            <span class="material-symbols-outlined">
+
+</span>
+          </li>
         </ul>
 
 
